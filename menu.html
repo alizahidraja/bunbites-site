@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="BunBites Wah Cantt — shawarma, roll paratha, BBQ, pizza & deals. Order on WhatsApp.">
+<meta property="og:title" content="BunBites — Menu">
+<meta property="og:description" content="Order shawarma, rolls, BBQ, pizza & deals on WhatsApp.">
+<meta property="og:image" content="logo.jpeg">
+<title>Menu — BunBites</title>
+<style>
+  :root{ --ink:#201A17; --navy:#1F2A44; --crimson:#C1121F; --teal:#0F766E; --surface:#FBF7EF; --muted:#6B7280; --wa:#25D366; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter,-apple-system,'Segoe UI',Roboto,sans-serif; background: var(--surface); color: var(--ink); padding-bottom: 96px; }
+  header { position: sticky; top: 0; background: var(--navy); color: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 12px; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
+  header a { color: #fff; text-decoration: none; font-size: 22px; }
+  header img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #fff; padding: 2px; }
+  header h1 { font-size: 19px; font-weight: 800; }
+  header span { font-size: 12px; opacity: .8; }
+  h2 { margin: 22px 16px 10px; font-size: 18px; font-weight: 800; color: var(--navy); scroll-margin-top: 112px; }
+  .cats { position: sticky; top: 62px; background: var(--surface); z-index: 9; display: flex; overflow-x: auto; gap: 8px; padding: 10px 12px; border-bottom: 1px solid #eee; -webkit-overflow-scrolling: touch; }
+  .cats a { white-space: nowrap; background: #fff; border: 1px solid #e5e0d6; border-radius: 999px; padding: 9px 15px; font-weight: 700; font-size: 13px; color: var(--navy); text-decoration: none; min-height: 38px; }
+  .cats a:active { background: var(--navy); color: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 0 12px; }
+  .item { background: #fff; border-radius: 16px; padding: 12px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.08); position: relative; border: 1px solid #eee; }
+  .item .thumb { font-size: 42px; line-height: 1; }
+  .item .thumb img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+  .item .name { font-weight: 600; font-size: 14px; margin-top: 8px; min-height: 34px; }
+  .item .price { font-weight: 800; font-size: 16px; color: var(--ink); margin: 4px 0 8px; font-feature-settings: "tnum"; }
+  .item .add { width: 100%; min-height: 48px; border: none; border-radius: 12px; background: var(--crimson); color: #fff; font-size: 20px; font-weight: 800; cursor: pointer; }
+  .item .add:active { background: #a00f1a; }
+  .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 2px solid #eee; padding: 10px 14px; display: flex; align-items: center; gap: 10px; z-index: 20; box-shadow: 0 -2px 12px rgba(0,0,0,.08); }
+  .cart-info { flex: 1; cursor: pointer; }
+  .cart-info .count { font-size: 12px; color: var(--muted); }
+  .cart-info .total { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .view-btn { min-height: 48px; padding: 0 16px; border: 2px solid var(--navy); border-radius: 12px; background: #fff; color: var(--navy); font-size: 15px; font-weight: 700; cursor: pointer; }
+  .order-btn { min-height: 52px; padding: 0 20px; border: none; border-radius: 12px; background: var(--wa); color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+  .order-btn:disabled { background: #c8c8c8; }
+  .cart-drawer { position: fixed; bottom: 84px; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; border-radius: 20px 20px 0 0; padding: 16px; z-index: 19; display: none; box-shadow: 0 -6px 24px rgba(0,0,0,.15); max-height: 55vh; overflow-y: auto; }
+  .cart-drawer .cd-title { font-weight: 800; font-size: 16px; margin-bottom: 8px; color: var(--navy); }
+  .cline { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+  .cline .cnm { flex: 1; font-weight: 600; font-size: 14px; }
+  .cline .cqt { display: flex; align-items: center; gap: 8px; }
+  .cline .cqt button { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--navy); background: #fff; color: var(--navy); font-size: 18px; font-weight: 800; cursor: pointer; line-height: 1; }
+  .cline .cqt span { min-width: 22px; text-align: center; font-weight: 800; }
+  .cline .cpr { min-width: 70px; text-align: right; font-weight: 800; font-size: 14px; }
+  .cline .cx { width: 34px; height: 34px; border-radius: 50%; border: none; background: #fee2e2; color: #991b1b; font-size: 15px; cursor: pointer; }
+  .clear-btn { margin-top: 12px; width: 100%; min-height: 48px; border: 2px solid var(--crimson); border-radius: 12px; background: #fff; color: var(--crimson); font-size: 15px; font-weight: 700; cursor: pointer; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 15px; }
+</style>
+</head>
+<body>
+<header>
+  <a href="/">&larr;</a>
+  <img src="logo.jpeg" alt="BunBites">
+  <div><h1>Menu</h1><span>BunBites &middot; order on WhatsApp</span></div>
+</header>
+
+<nav class="cats">
+  <a href="#cat-0">Shawarma</a><a href="#cat-1">Wraps</a><a href="#cat-2">Roll Paratha</a><a href="#cat-3">Tikka</a><a href="#cat-4">Bar B Q</a><a href="#cat-5">Deals</a><a href="#cat-6">Platters</a><a href="#cat-7">Midnight Pizza</a><a href="#cat-8">Pizza Special</a><a href="#cat-9">Pizza</a><a href="#cat-10">Beef Burger</a><a href="#cat-11">Burgers</a><a href="#cat-12">Pasta</a><a href="#cat-13">Calzone</a><a href="#cat-14">Fries</a><a href="#cat-15">Side Order</a><a href="#cat-16">Beverages</a><a href="#cat-17">Dips</a><a href="#cat-18">Add-ons</a>
+</nav>
+
+<h2 id="cat-0">Shawarma</h2>
+  <div class="grid">
+    <div class="item" data-code="SH-CHEESE" data-name="Cheese Shawarma" data-price="299">
+      <div class="thumb">🌯</div>
+      <div class="name">Cheese Shawarma</div>
+      <div class="price">Rs 299</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="SH-CHICKEN" data-name="Chicken Shawarma" data-price="199">
+      <div class="thumb">🌯</div>
+      <div class="name">Chicken Shawarma</div>
+      <div class="price">Rs 199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="SH-PLATTER" data-name="Platter Shawarma" data-price="299">
+      <div class="thumb">🌯</div>
+      <div class="name">Platter Shawarma</div>
+      <div class="price">Rs 299</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="SH-ZINGER" data-name="Zinger Shawarma" data-price="399">
+      <div class="thumb">🌯</div>
+      <div class="name">Zinger Shawarma</div>
+      <div class="price">Rs 399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-1">Wraps</h2>
+  <div class="grid">
+    <div class="item" data-code="WR-CHICKEN" data-name="Chicken Wraps" data-price="449">
+      <div class="thumb">🌯</div>
+      <div class="name">Chicken Wraps</div>
+      <div class="price">Rs 449</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="WR-ZINGER" data-name="Zinger Wraps" data-price="499">
+      <div class="thumb">🌯</div>
+      <div class="name">Zinger Wraps</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-2">Roll Paratha</h2>
+  <div class="grid">
+    <div class="item" data-code="RP-CHEESE-B" data-name="Cheese Roll Paratha - BoomBoom" data-price="649">
+      <div class="thumb">🫓</div>
+      <div class="name">Cheese Roll Paratha - BoomBoom</div>
+      <div class="price">Rs 649</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-CHEESE-J" data-name="Cheese Roll Paratha - Jumbo" data-price="499">
+      <div class="thumb">🫓</div>
+      <div class="name">Cheese Roll Paratha - Jumbo</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-CHEESE-S" data-name="Cheese Roll Paratha - Small" data-price="349">
+      <div class="thumb">🫓</div>
+      <div class="name">Cheese Roll Paratha - Small</div>
+      <div class="price">Rs 349</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-CHICKEN-B" data-name="Chicken Roll Paratha - BoomBoom" data-price="599">
+      <div class="thumb">🫓</div>
+      <div class="name">Chicken Roll Paratha - BoomBoom</div>
+      <div class="price">Rs 599</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-CHICKEN-J" data-name="Chicken Roll Paratha - Jumbo" data-price="449">
+      <div class="thumb">🫓</div>
+      <div class="name">Chicken Roll Paratha - Jumbo</div>
+      <div class="price">Rs 449</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-CHICKEN-S" data-name="Chicken Roll Paratha - Small" data-price="299">
+      <div class="thumb">🫓</div>
+      <div class="name">Chicken Roll Paratha - Small</div>
+      <div class="price">Rs 299</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-MALAI-B" data-name="Malai Boti Roll Paratha - BoomBoom" data-price="649">
+      <div class="thumb">🫓</div>
+      <div class="name">Malai Boti Roll Paratha - BoomBoom</div>
+      <div class="price">Rs 649</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-MALAI-J" data-name="Malai Boti Roll Paratha - Jumbo" data-price="499">
+      <div class="thumb">🫓</div>
+      <div class="name">Malai Boti Roll Paratha - Jumbo</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-MALAI-S" data-name="Malai Boti Roll Paratha - Small" data-price="349">
+      <div class="thumb">🫓</div>
+      <div class="name">Malai Boti Roll Paratha - Small</div>
+      <div class="price">Rs 349</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-SEEKH-B" data-name="Seekh Kabab Roll Paratha - BoomBoom" data-price="549">
+      <div class="thumb">🫓</div>
+      <div class="name">Seekh Kabab Roll Paratha - BoomBoom</div>
+      <div class="price">Rs 549</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-SEEKH-J" data-name="Seekh Kabab Roll Paratha - Jumbo" data-price="399">
+      <div class="thumb">🫓</div>
+      <div class="name">Seekh Kabab Roll Paratha - Jumbo</div>
+      <div class="price">Rs 399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-SEEKH-S" data-name="Seekh Kabab Roll Paratha - Small" data-price="249">
+      <div class="thumb">🫓</div>
+      <div class="name">Seekh Kabab Roll Paratha - Small</div>
+      <div class="price">Rs 249</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-ZINGER-B" data-name="Zinger Roll Paratha - BoomBoom" data-price="750">
+      <div class="thumb">🫓</div>
+      <div class="name">Zinger Roll Paratha - BoomBoom</div>
+      <div class="price">Rs 750</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="RP-ZINGER-J" data-name="Zinger Roll Paratha - Jumbo" data-price="500">
+      <div class="thumb">🫓</div>
+      <div class="name">Zinger Roll Paratha - Jumbo</div>
+      <div class="price">Rs 500</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-3">Tikka</h2>
+  <div class="grid">
+    <div class="item" data-code="TK-CHEST" data-name="Chicken Tikka Chest" data-price="399">
+      <div class="thumb">🍢</div>
+      <div class="name">Chicken Tikka Chest</div>
+      <div class="price">Rs 399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="TK-LEG" data-name="Chicken Tikka Leg" data-price="349">
+      <div class="thumb">🍢</div>
+      <div class="name">Chicken Tikka Leg</div>
+      <div class="price">Rs 349</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-4">Bar B Q</h2>
+  <div class="grid">
+    <div class="item" data-code="BBQ-MALAI-D" data-name="Chicken Malai Boti - Double" data-price="699">
+      <div class="thumb">🍖</div>
+      <div class="name">Chicken Malai Boti - Double</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BBQ-MALAI-S" data-name="Chicken Malai Boti - Single" data-price="399">
+      <div class="thumb">🍖</div>
+      <div class="name">Chicken Malai Boti - Single</div>
+      <div class="price">Rs 399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BBQ-SEEKH-D" data-name="Chicken Seekh Kabab - Double" data-price="1200">
+      <div class="thumb">🍖</div>
+      <div class="name">Chicken Seekh Kabab - Double</div>
+      <div class="price">Rs 1200</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BBQ-SEEKH-S" data-name="Chicken Seekh Kabab - Single" data-price="650">
+      <div class="thumb">🍖</div>
+      <div class="name">Chicken Seekh Kabab - Single</div>
+      <div class="price">Rs 650</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BBQ-TIKKA-D" data-name="Chicken Tikka Boti - Double" data-price="649">
+      <div class="thumb">🍖</div>
+      <div class="name">Chicken Tikka Boti - Double</div>
+      <div class="price">Rs 649</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BBQ-TIKKA-S" data-name="Chicken Tikka Boti - Single" data-price="349">
+      <div class="thumb">🍖</div>
+      <div class="name">Chicken Tikka Boti - Single</div>
+      <div class="price">Rs 349</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-5">Deals</h2>
+  <div class="grid">
+    <div class="item" data-code="DL-SEEKH5" data-name="5 Seekh Kabab Roll Deal" data-price="999">
+      <div class="thumb">🎁</div>
+      <div class="name">5 Seekh Kabab Roll Deal</div>
+      <div class="price">Rs 999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-01" data-name="Deal 01 (Roll S + Fries + Drink)" data-price="449">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 01 (Roll S + Fries + Drink)</div>
+      <div class="price">Rs 449</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-02" data-name="Deal 02 (Roll + Shawarma + Fries + Drink)" data-price="649">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 02 (Roll + Shawarma + Fries + Drink)</div>
+      <div class="price">Rs 649</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-03" data-name="Deal 03 (2 Shawarma + Jumbo Roll + Fries + Drink)" data-price="949">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 03 (2 Shawarma + Jumbo Roll + Fries + Drink)</div>
+      <div class="price">Rs 949</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-04" data-name="Deal 04 (5 Shawarma + 1L Drink)" data-price="1049">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 04 (5 Shawarma + 1L Drink)</div>
+      <div class="price">Rs 1049</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-05" data-name="Deal 05 (4 Regular Roll + 1L Drink)" data-price="1249">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 05 (4 Regular Roll + 1L Drink)</div>
+      <div class="price">Rs 1249</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-06" data-name="Deal 06 (3 Roll + 3 Shawarma + 3 Seekh Roll + 2 Drinks)" data-price="2399">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 06 (3 Roll + 3 Shawarma + 3 Seekh Roll + 2 Drinks)</div>
+      <div class="price">Rs 2399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-1" data-name="Deal 1" data-price="649">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 1</div>
+      <div class="price">Rs 649</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-2" data-name="Deal 2" data-price="899">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 2</div>
+      <div class="price">Rs 899</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-3" data-name="Deal 3" data-price="1199">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 3</div>
+      <div class="price">Rs 1199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-4" data-name="Deal 4" data-price="1399">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 4</div>
+      <div class="price">Rs 1399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-5" data-name="Deal 5" data-price="1349">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 5</div>
+      <div class="price">Rs 1349</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-6" data-name="Deal 6" data-price="1999">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 6</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-7" data-name="Deal 7" data-price="2699">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 7</div>
+      <div class="price">Rs 2699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-8" data-name="Deal 8" data-price="3999">
+      <div class="thumb">🎁</div>
+      <div class="name">Deal 8</div>
+      <div class="price">Rs 3999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DL-ROLL3" data-name="One-One Deal (3 Roll Paratha + 3 Shawarma + 1L Drink)" data-price="1299">
+      <div class="thumb">🎁</div>
+      <div class="name">One-One Deal (3 Roll Paratha + 3 Shawarma + 1L Drink)</div>
+      <div class="price">Rs 1299</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-6">Platters</h2>
+  <div class="grid">
+    <div class="item" data-code="PL-01" data-name="Platter 01 (Tikka Chest + 3 Boti + Seekh + Chutney + Salad + Drink)" data-price="649">
+      <div class="thumb">🍱</div>
+      <div class="name">Platter 01 (Tikka Chest + 3 Boti + Seekh + Chutney + Salad + Drink)</div>
+      <div class="price">Rs 649</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PL-02" data-name="Platter 02 (Chest + 3 Tikka Boti + 3 Malai + 3 Seekh + 2 Paratha)" data-price="1099">
+      <div class="thumb">🍱</div>
+      <div class="name">Platter 02 (Chest + 3 Tikka Boti + 3 Malai + 3 Seekh + 2 Paratha)</div>
+      <div class="price">Rs 1099</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PL-03" data-name="Platter 03 (Leg + 6 Tikka Boti + 6 Seekh + Drink)" data-price="1099">
+      <div class="thumb">🍱</div>
+      <div class="name">Platter 03 (Leg + 6 Tikka Boti + 6 Seekh + Drink)</div>
+      <div class="price">Rs 1099</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PL-04" data-name="Platter 04 (Leg + Chest + 6 Malai + 6 Seekh + 8 Paratha + 1L Drink)" data-price="2449">
+      <div class="thumb">🍱</div>
+      <div class="name">Platter 04 (Leg + Chest + 6 Malai + 6 Seekh + 8 Paratha + 1L Drink)</div>
+      <div class="price">Rs 2449</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PL-05" data-name="Platter 05 (2 Chest + 12 Tikka + 12 Malai + 12 Seekh + 10 Paratha + 1.5L Drink)" data-price="3999">
+      <div class="thumb">🍱</div>
+      <div class="name">Platter 05 (2 Chest + 12 Tikka + 12 Malai + 12 Seekh + 10 Paratha + 1.5L Drink)</div>
+      <div class="price">Rs 3999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-7">Midnight Pizza</h2>
+  <div class="grid">
+    <div class="item" data-code="MP-TIKKA-L" data-name="Arabian Tikka Pizza (Midnight) - Large" data-price="1699">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka Pizza (Midnight) - Large</div>
+      <div class="price">Rs 1699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-TIKKA-M" data-name="Arabian Tikka Pizza (Midnight) - Medium" data-price="1399">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka Pizza (Midnight) - Medium</div>
+      <div class="price">Rs 1399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-TIKKA-S" data-name="Arabian Tikka Pizza (Midnight) - Small" data-price="499">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka Pizza (Midnight) - Small</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-TIKKA-XL" data-name="Arabian Tikka Pizza (Midnight) - XL" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka Pizza (Midnight) - XL</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-CHEESE-L" data-name="Cheese Lover Pizza (Midnight) - Large" data-price="1699">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza (Midnight) - Large</div>
+      <div class="price">Rs 1699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-CHEESE-M" data-name="Cheese Lover Pizza (Midnight) - Medium" data-price="1399">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza (Midnight) - Medium</div>
+      <div class="price">Rs 1399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-CHEESE-S" data-name="Cheese Lover Pizza (Midnight) - Small" data-price="499">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza (Midnight) - Small</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-CHEESE-XL" data-name="Cheese Lover Pizza (Midnight) - XL" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza (Midnight) - XL</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-SUPREME-L" data-name="Chicken Supreme Pizza (Midnight) - Large" data-price="1699">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme Pizza (Midnight) - Large</div>
+      <div class="price">Rs 1699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-SUPREME-M" data-name="Chicken Supreme Pizza (Midnight) - Medium" data-price="1399">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme Pizza (Midnight) - Medium</div>
+      <div class="price">Rs 1399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-SUPREME-S" data-name="Chicken Supreme Pizza (Midnight) - Small" data-price="499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme Pizza (Midnight) - Small</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-SUPREME-XL" data-name="Chicken Supreme Pizza (Midnight) - XL" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme Pizza (Midnight) - XL</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-FAJITA-L" data-name="Fajita Pizza (Midnight) - Large" data-price="1699">
+      <div class="thumb">🍕</div>
+      <div class="name">Fajita Pizza (Midnight) - Large</div>
+      <div class="price">Rs 1699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-FAJITA-M" data-name="Fajita Pizza (Midnight) - Medium" data-price="1399">
+      <div class="thumb">🍕</div>
+      <div class="name">Fajita Pizza (Midnight) - Medium</div>
+      <div class="price">Rs 1399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-FAJITA-S" data-name="Fajita Pizza (Midnight) - Small" data-price="499">
+      <div class="thumb">🍕</div>
+      <div class="name">Fajita Pizza (Midnight) - Small</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-FAJITA-XL" data-name="Fajita Pizza (Midnight) - XL" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Fajita Pizza (Midnight) - XL</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-MALAI-L" data-name="Malai Boti Pizza (Midnight) - Large" data-price="1699">
+      <div class="thumb">🍕</div>
+      <div class="name">Malai Boti Pizza (Midnight) - Large</div>
+      <div class="price">Rs 1699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-MALAI-M" data-name="Malai Boti Pizza (Midnight) - Medium" data-price="1399">
+      <div class="thumb">🍕</div>
+      <div class="name">Malai Boti Pizza (Midnight) - Medium</div>
+      <div class="price">Rs 1399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-MALAI-S" data-name="Malai Boti Pizza (Midnight) - Small" data-price="499">
+      <div class="thumb">🍕</div>
+      <div class="name">Malai Boti Pizza (Midnight) - Small</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="MP-MALAI-XL" data-name="Malai Boti Pizza (Midnight) - XL" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Malai Boti Pizza (Midnight) - XL</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-8">Pizza Special</h2>
+  <div class="grid">
+    <div class="item" data-code="PZSP-KABBAB-L" data-name="Hot Kabbab - L" data-price="2199">
+      <div class="thumb">🍕</div>
+      <div class="name">Hot Kabbab - L</div>
+      <div class="price">Rs 2199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-KABBAB-M" data-name="Hot Kabbab - M" data-price="1599">
+      <div class="thumb">🍕</div>
+      <div class="name">Hot Kabbab - M</div>
+      <div class="price">Rs 1599</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-KABBAB-XL" data-name="Hot Kabbab - XL" data-price="2699">
+      <div class="thumb">🍕</div>
+      <div class="name">Hot Kabbab - XL</div>
+      <div class="price">Rs 2699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-ITALIAN-L" data-name="Italian Crust - L" data-price="2199">
+      <div class="thumb">🍕</div>
+      <div class="name">Italian Crust - L</div>
+      <div class="price">Rs 2199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-ITALIAN-M" data-name="Italian Crust - M" data-price="1599">
+      <div class="thumb">🍕</div>
+      <div class="name">Italian Crust - M</div>
+      <div class="price">Rs 1599</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-ITALIAN-XL" data-name="Italian Crust - XL" data-price="2699">
+      <div class="thumb">🍕</div>
+      <div class="name">Italian Crust - XL</div>
+      <div class="price">Rs 2699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-STUFF-L" data-name="Stuff Crust - L" data-price="2199">
+      <div class="thumb">🍕</div>
+      <div class="name">Stuff Crust - L</div>
+      <div class="price">Rs 2199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-STUFF-M" data-name="Stuff Crust - M" data-price="1599">
+      <div class="thumb">🍕</div>
+      <div class="name">Stuff Crust - M</div>
+      <div class="price">Rs 1599</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZSP-STUFF-XL" data-name="Stuff Crust - XL" data-price="2699">
+      <div class="thumb">🍕</div>
+      <div class="name">Stuff Crust - XL</div>
+      <div class="price">Rs 2699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-9">Pizza</h2>
+  <div class="grid">
+    <div class="item" data-code="PZ-TIKKA-L" data-name="Arabian Tikka - L" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka - L</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-TIKKA-M" data-name="Arabian Tikka - M" data-price="1499">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka - M</div>
+      <div class="price">Rs 1499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-TIKKA-S" data-name="Arabian Tikka - S" data-price="699">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka - S</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-TIKKA-XL" data-name="Arabian Tikka - XL" data-price="2499">
+      <div class="thumb">🍕</div>
+      <div class="name">Arabian Tikka - XL</div>
+      <div class="price">Rs 2499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-CHEESE-L" data-name="Cheese Lover Pizza - L" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza - L</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-CHEESE-M" data-name="Cheese Lover Pizza - M" data-price="1499">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza - M</div>
+      <div class="price">Rs 1499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-CHEESE-S" data-name="Cheese Lover Pizza - S" data-price="699">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza - S</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-CHEESE-XL" data-name="Cheese Lover Pizza - XL" data-price="2499">
+      <div class="thumb">🍕</div>
+      <div class="name">Cheese Lover Pizza - XL</div>
+      <div class="price">Rs 2499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-FAJITA-L" data-name="Chicken Fajita - L" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Fajita - L</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-FAJITA-M" data-name="Chicken Fajita - M" data-price="1499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Fajita - M</div>
+      <div class="price">Rs 1499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-FAJITA-S" data-name="Chicken Fajita - S" data-price="699">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Fajita - S</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-FAJITA-XL" data-name="Chicken Fajita - XL" data-price="2499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Fajita - XL</div>
+      <div class="price">Rs 2499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-MALAI-L" data-name="Chicken Malai Boti - L" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Malai Boti - L</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-MALAI-M" data-name="Chicken Malai Boti - M" data-price="1499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Malai Boti - M</div>
+      <div class="price">Rs 1499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-MALAI-S" data-name="Chicken Malai Boti - S" data-price="699">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Malai Boti - S</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-MALAI-XL" data-name="Chicken Malai Boti - XL" data-price="2499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Malai Boti - XL</div>
+      <div class="price">Rs 2499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-SUPREME-L" data-name="Chicken Supreme - L" data-price="1999">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme - L</div>
+      <div class="price">Rs 1999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-SUPREME-M" data-name="Chicken Supreme - M" data-price="1499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme - M</div>
+      <div class="price">Rs 1499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-SUPREME-S" data-name="Chicken Supreme - S" data-price="699">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme - S</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PZ-SUPREME-XL" data-name="Chicken Supreme - XL" data-price="2499">
+      <div class="thumb">🍕</div>
+      <div class="name">Chicken Supreme - XL</div>
+      <div class="price">Rs 2499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-10">Beef Burger</h2>
+  <div class="grid">
+    <div class="item" data-code="BB-SMASHED" data-name="Beef Smashed" data-price="799">
+      <div class="thumb">🍔</div>
+      <div class="name">Beef Smashed</div>
+      <div class="price">Rs 799</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BB-SWISS" data-name="Swiss Mushroom" data-price="950">
+      <div class="thumb">🍔</div>
+      <div class="name">Swiss Mushroom</div>
+      <div class="price">Rs 950</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-11">Burgers</h2>
+  <div class="grid">
+    <div class="item" data-code="BG-PETTY" data-name="Petty Burger" data-price="399">
+      <div class="thumb">🍔</div>
+      <div class="name">Petty Burger</div>
+      <div class="price">Rs 399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BG-PETTY-SUPREME" data-name="Petty Supreme" data-price="699">
+      <div class="thumb">🍔</div>
+      <div class="name">Petty Supreme</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BG-ZINGER" data-name="Zinger Burger" data-price="499">
+      <div class="thumb">🍔</div>
+      <div class="name">Zinger Burger</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BG-ZINGER-SUPREME" data-name="Zinger Supreme" data-price="799">
+      <div class="thumb">🍔</div>
+      <div class="name">Zinger Supreme</div>
+      <div class="price">Rs 799</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-12">Pasta</h2>
+  <div class="grid">
+    <div class="item" data-code="PASTA-CRISPY" data-name="Crispy Pasta with Crunchy Chicken" data-price="999">
+      <div class="thumb">🍝</div>
+      <div class="name">Crispy Pasta with Crunchy Chicken</div>
+      <div class="price">Rs 999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PASTA-MAC" data-name="Mac N Cheese Pasta" data-price="799">
+      <div class="thumb">🍝</div>
+      <div class="name">Mac N Cheese Pasta</div>
+      <div class="price">Rs 799</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="PASTA-PENNE-ALFREDO" data-name="Penne Alfredo with Chicken" data-price="999">
+      <div class="thumb">🍝</div>
+      <div class="name">Penne Alfredo with Chicken</div>
+      <div class="price">Rs 999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-13">Calzone</h2>
+  <div class="grid">
+    <div class="item" data-code="CZ-CHUNKS-L" data-name="Calzone Chunks - L" data-price="1849">
+      <div class="thumb">🥟</div>
+      <div class="name">Calzone Chunks - L</div>
+      <div class="price">Rs 1849</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="CZ-CHUNKS-M" data-name="Calzone Chunks - M" data-price="1349">
+      <div class="thumb">🥟</div>
+      <div class="name">Calzone Chunks - M</div>
+      <div class="price">Rs 1349</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-14">Fries</h2>
+  <div class="grid">
+    <div class="item" data-code="FR-CRISPY-LOADED" data-name="Crispy Loaded Fries" data-price="999">
+      <div class="thumb">🍟</div>
+      <div class="name">Crispy Loaded Fries</div>
+      <div class="price">Rs 999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="FR-LOADED" data-name="Loaded Fries" data-price="799">
+      <div class="thumb">🍟</div>
+      <div class="name">Loaded Fries</div>
+      <div class="price">Rs 799</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="FR-PLAIN-D" data-name="Plain Fries - Double Serving" data-price="499">
+      <div class="thumb">🍟</div>
+      <div class="name">Plain Fries - Double Serving</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="FR-PLAIN-S" data-name="Plain Fries - Single Serving" data-price="399">
+      <div class="thumb">🍟</div>
+      <div class="name">Plain Fries - Single Serving</div>
+      <div class="price">Rs 399</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-15">Side Order</h2>
+  <div class="grid">
+    <div class="item" data-code="SD-3CHICKEN" data-name="3 Chicken Pcs" data-price="999">
+      <div class="thumb">🍗</div>
+      <div class="name">3 Chicken Pcs</div>
+      <div class="price">Rs 999</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="SD-CRISPYWINGS" data-name="Crispy Wings - 6 Pcs" data-price="699">
+      <div class="thumb">🍗</div>
+      <div class="name">Crispy Wings - 6 Pcs</div>
+      <div class="price">Rs 699</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="SD-HOTWINGS" data-name="Hot Wings - 6 Pcs" data-price="599">
+      <div class="thumb">🍗</div>
+      <div class="name">Hot Wings - 6 Pcs</div>
+      <div class="price">Rs 599</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="SD-NUGGETS" data-name="Nuggets - 6 Pcs" data-price="499">
+      <div class="thumb">🍗</div>
+      <div class="name">Nuggets - 6 Pcs</div>
+      <div class="price">Rs 499</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-16">Beverages</h2>
+  <div class="grid">
+    <div class="item" data-code="BV-SOFT-1L" data-name="Soft Drink - 1 Ltr" data-price="199">
+      <div class="thumb">🥤</div>
+      <div class="name">Soft Drink - 1 Ltr</div>
+      <div class="price">Rs 199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="BV-SOFT-REG" data-name="Soft Drink - Reg" data-price="99">
+      <div class="thumb">🥤</div>
+      <div class="name">Soft Drink - Reg</div>
+      <div class="price">Rs 99</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-17">Dips</h2>
+  <div class="grid">
+    <div class="item" data-code="DP-DIPSAUCE" data-name="Dip Sauce" data-price="99">
+      <div class="thumb">🥫</div>
+      <div class="name">Dip Sauce</div>
+      <div class="price">Rs 99</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DP-HOTGARLIC" data-name="Hot Garlic" data-price="99">
+      <div class="thumb">🥫</div>
+      <div class="name">Hot Garlic</div>
+      <div class="price">Rs 99</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="DP-MAYO" data-name="Plain Mayo" data-price="69">
+      <div class="thumb">🥫</div>
+      <div class="name">Plain Mayo</div>
+      <div class="price">Rs 69</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+<h2 id="cat-18">Add-ons</h2>
+  <div class="grid">
+    <div class="item" data-code="AD-CHEESESLICE" data-name="Cheese Slice" data-price="99">
+      <div class="thumb">➕</div>
+      <div class="name">Cheese Slice</div>
+      <div class="price">Rs 99</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="AD-EXTRABEEF" data-name="Extra Beef Patty" data-price="299">
+      <div class="thumb">➕</div>
+      <div class="name">Extra Beef Patty</div>
+      <div class="price">Rs 299</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+    <div class="item" data-code="AD-EXTRACHEESE" data-name="Extra Cheese" data-price="199">
+      <div class="thumb">➕</div>
+      <div class="name">Extra Cheese</div>
+      <div class="price">Rs 199</div>
+      <button class="add" onclick="add(this)">+ Add</button>
+    </div>
+  </div>
+
+
+<div class="cart-bar">
+  <div class="cart-info" onclick="toggleCart()">
+    <div class="count" id="count">0 items</div>
+    <div class="total" id="total">Rs 0</div>
+  </div>
+  <button class="view-btn" onclick="toggleCart()">Cart</button>
+  <button class="order-btn" id="orderBtn" disabled onclick="order()">WhatsApp</button>
+</div>
+<div class="cart-drawer" id="cartDrawer"></div>
+
+<script>
+var cart = {};
+var number = "923110177077";
+
+function add(btn) {
+  var el = btn.closest('.item');
+  var code = el.dataset.code, name = el.dataset.name, price = parseFloat(el.dataset.price);
+  if (!cart[code]) cart[code] = { name: name, price: price, qty: 0 };
+  cart[code].qty++;
+  render();
+}
+
+function render() {
+  var count = 0, total = 0;
+  for (var k in cart) { count += cart[k].qty; total += cart[k].qty * cart[k].price; }
+  document.getElementById('count').textContent = count + (count === 1 ? ' item' : ' items');
+  document.getElementById('total').textContent = 'Rs ' + total.toLocaleString('en-PK');
+  document.getElementById('orderBtn').disabled = count === 0;
+  if (document.getElementById('cartDrawer').style.display === 'block') renderCart();
+}
+
+function toggleCart() {
+  var d = document.getElementById('cartDrawer');
+  var show = d.style.display !== 'block';
+  d.style.display = show ? 'block' : 'none';
+  if (show) renderCart();
+}
+
+function renderCart() {
+  var el = document.getElementById('cartDrawer');
+  var html = '<div class="cd-title">Your order</div>';
+  var any = false;
+  for (var k in cart) {
+    any = true;
+    var it = cart[k];
+    html += '<div class="cline">' +
+      '<div class="cnm">' + esc(it.name) + '</div>' +
+      '<div class="cqt"><button onclick="changeQty(\'' + k + '\',-1)">&minus;</button><span>' + it.qty + '</span><button onclick="changeQty(\'' + k + '\',1)">+</button></div>' +
+      '<div class="cpr">Rs ' + (it.qty * it.price).toLocaleString('en-PK') + '</div>' +
+      '<button class="cx" onclick="removeItem(\'' + k + '\')">&#10005;</button>' +
+      '</div>';
+  }
+  if (!any) html += '<div class="empty">Cart is empty — add items above</div>';
+  else html += '<button class="clear-btn" onclick="clearCart()">Clear all</button>';
+  el.innerHTML = html;
+}
+
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;'); }
+
+function changeQty(k, d) { cart[k].qty += d; if (cart[k].qty <= 0) delete cart[k]; render(); }
+function removeItem(k) { delete cart[k]; render(); }
+function clearCart() { cart = {}; render(); toggleCart(); }
+
+function order() {
+  var lines = ['*🍔 BUNBITES — NEW ORDER*', '📍 Wah Cantt', ''], total = 0;
+  lines.push('*Your order:*');
+  for (var k in cart) {
+    var it = cart[k];
+    lines.push('• ' + it.qty + '× ' + it.name + ' — Rs ' + (it.qty * it.price).toLocaleString('en-PK'));
+    total += it.qty * it.price;
+  }
+  lines.push('');
+  lines.push('*TOTAL: Rs ' + total.toLocaleString('en-PK') + '*');
+  lines.push('');
+  lines.push('*Your details:*');
+  lines.push('👤 Name:');
+  lines.push('📞 Phone:');
+  lines.push('📍 Address:');
+  lines.push('🛵 Delivery or 🍽️ Pickup:');
+  lines.push('');
+  lines.push('_Please fill and send — we will confirm your order_');
+  var url = 'https://wa.me/' + number + '?text=' + encodeURIComponent(lines.join('\n'));
+  window.open(url, '_blank');
+}
+</script>
+</body>
+</html>
